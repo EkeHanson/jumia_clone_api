@@ -21,7 +21,7 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
 
         original_balance = Decimal( user.balance) 
         if user.level == "VIP1" and  user.balance > 0:
-            grab_amount = Decimal(10)
+            grab_amount = Decimal(100)
             if user.balance < grab_amount - 1:
                 return Response({"error": "Insufficient balance"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -32,7 +32,7 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
 
             # Calculate commission (20% of order price)
 
-            commission_amount = Decimal(2)  # Ensure commission_amount is a Decimal
+            commission_amount = Decimal(20)  # Ensure commission_amount is a Decimal
             today = timezone.now().date()  # Get today's date
 
             # Check the last order grabbing day
@@ -64,7 +64,7 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         elif user.level == "VIP2" and  user.balance > 0:
-            grab_amount = Decimal(20)
+            grab_amount = Decimal(500)
             if user.balance < grab_amount - 1:
                 return Response({"error": "Insufficient balance"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -72,7 +72,7 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
                 return Response({"error": "Grab limit reached"}, status=status.HTTP_400_BAD_REQUEST)
             
             if user.grabbed_orders_count < 1:
-                user.balance = original_balance - Decimal(40) 
+                user.balance = original_balance - Decimal(1200) 
             elif user.grabbed_orders_count >= 1:
                 user.balance = original_balance - grab_amount
     
@@ -91,20 +91,20 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
             # Update user's commission based on the day
             if last_grab_day is None or last_grab_day == today:
                 if user.grabbed_orders_count == 0:
-                    user.commission2 += Decimal(12)
+                    user.commission2 += Decimal(360)
                 else:
-                    user.commission2 += Decimal(6)
+                    user.commission2 += Decimal(150)
             else:
                 if user.grabbed_orders_count == 0:
-                    user.commission1 += Decimal(12)
+                    user.commission1 += Decimal(360)
                 else:
-                    user.commission1 += Decimal(6)
+                    user.commission1 += Decimal(150)
             
             if  user.grabbed_orders_count == 0:
-                user.unsettle = Decimal(40) +  Decimal(12)
+                user.unsettle = Decimal(1200) +  Decimal(360)
                 # user.unsettle = Decimal(40) + commission_amount
             else:
-                user.unsettle += grab_amount +  Decimal(6)
+                user.unsettle += grab_amount +  Decimal(150)
                 # user.unsettle += grab_amount +  Decimal((30/100) * 20)
                 # user.unsettle += grab_amount + commission_amount
 
@@ -117,8 +117,8 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         elif user.level == "VIP3" and  user.balance > 0:
-            grab_amount = Decimal(20)
-            commission_amount = Decimal(49)  # Ensure commission_amount is a Decimal
+            grab_amount = Decimal(2000)
+            commission_amount = Decimal(1000)  # Ensure commission_amount is a Decimal
             if user.balance < grab_amount - 1:
                 return Response({"error": "Insufficient balance"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -127,42 +127,42 @@ class OrderGrabbingViewSet(viewsets.ModelViewSet):
 
             match user.grabbed_orders_count:
                 case 0:
-                    user.balance = original_balance - Decimal(70)
-                    user.unsettle = Decimal(70) + commission_amount
+                    user.balance = original_balance - Decimal(2000)
+                    user.unsettle = Decimal(2000) + commission_amount
 
                 case 1:
-                    user.balance = original_balance - Decimal(120)
-                    user.unsettle = Decimal(user.unsettle) + Decimal(120) + Decimal(84)
+                    user.balance = original_balance - Decimal(4850)
+                    user.unsettle = Decimal(user.unsettle) + Decimal(4850) + Decimal(2425)
                 case 2:
-                    user.balance = original_balance - Decimal(200)
-                    user.unsettle = Decimal(user.unsettle) + Decimal(200) + Decimal(140)
+                    user.balance = original_balance - Decimal(7530)
+                    user.unsettle = Decimal(user.unsettle) + Decimal(7530) + Decimal(3765)
                 case 3:
-                    user.balance = original_balance - Decimal(500)
-                    user.unsettle = Decimal(user.unsettle) + Decimal(500) + Decimal(350)
+                    user.balance = original_balance - Decimal(12500)
+                    user.unsettle = Decimal(user.unsettle) + Decimal(12500) + Decimal(6250)
                 case 4:
-                    user.balance = original_balance - Decimal(900)
-                    user.unsettle = Decimal(user.unsettle) + Decimal(900) + Decimal(648)
+                    user.balance = original_balance - Decimal(20200)
+                    user.unsettle = Decimal(user.unsettle) + Decimal(20200) + Decimal(10100)
                 case 5:
-                    user.balance = original_balance - Decimal(1200)
-                    user.unsettle = Decimal(user.unsettle) + Decimal(1200) + Decimal(840)
+                    user.balance = original_balance - Decimal(12700)
+                    user.unsettle = Decimal(user.unsettle) + Decimal(12700) + Decimal(6350)
                 case 6:
-                    user.balance = original_balance - Decimal(1500)
-                    user.unsettle = Decimal(user.unsettle) + Decimal(1500) + Decimal(1050)
+                    user.balance = original_balance - Decimal(35000)
+                    user.unsettle = Decimal(user.unsettle) + Decimal(35000) + Decimal(17500)
                 case 7:
-                    user.balance = original_balance - Decimal(2200)
-                    user.unsettle = Decimal(user.unsettle) + Decimal(2200) + Decimal(1540)
+                    user.balance = original_balance - Decimal(37800)
+                    user.unsettle = Decimal(user.unsettle) + Decimal(37800) + Decimal(18900)
                 case 8:
-                    user.balance = original_balance - Decimal(3000)
-                    user.unsettle = Decimal(user.unsettle) + Decimal(3000) + Decimal(2100)
+                    user.balance = original_balance - Decimal(55700)
+                    user.unsettle = Decimal(user.unsettle) + Decimal(55700) + Decimal(27850)
                 case 9:
-                    user.balance = original_balance - Decimal(3500)
-                    user.unsettle =Decimal(user.unsettle) +  Decimal(3500) + Decimal(2450)
+                    user.balance = original_balance - Decimal(43200)
+                    user.unsettle =Decimal(user.unsettle) +  Decimal(43200) + Decimal(21600)
                 case 10:
-                    user.balance = original_balance - Decimal(3950)
-                    user.unsettle = Decimal(user.unsettle) + Decimal(3950) + Decimal(2765)
+                    user.balance = original_balance - Decimal(63600)
+                    user.unsettle = Decimal(user.unsettle) + Decimal(63600) + Decimal(31800)
                 case 11:
-                    user.balance = original_balance - Decimal(4200)
-                    user.unsettle = Decimal(user.unsettle) + Decimal(4200) + Decimal(2940)
+                    user.balance = original_balance - Decimal(85000)
+                    user.unsettle = Decimal(user.unsettle) + Decimal(85000) + Decimal(42500)
                 case _:
                     pass
 
