@@ -14,8 +14,12 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from .serializers import PasswordResetSerializer
+from rest_framework.filters import SearchFilter
 
 from rest_framework.pagination import PageNumberPagination
+
+from django.contrib.postgres.search import SearchVector
+from django.db.models import Q
 
 
 
@@ -25,6 +29,26 @@ logger = logging.getLogger(__name__)
 def generate_short_code():
     return hashlib.md5(uuid.uuid4().bytes).hexdigest()[:10]  # 10-character hash
 
+class UserSearchView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        query = request.query_params.get('q', '')
+        if not query:
+            return Response({'error': 'A search query is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Use SearchVector for indexed searching to improve performance
+        search_vector = SearchVector('firstName', 'lastName')
+        users = CustomUser.objects.annotate(search=search_vector).filter(
+            Q(firstName__icontains=query) | Q(lastName__icontains=query)
+        )
+
+        if not users.exists():
+            return Response({'message': 'No users found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CustomUserSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
 class InvitationCodeViewSet(viewsets.ModelViewSet):
     queryset = InvitationCode.objects.all()
@@ -89,7 +113,14 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         if level not in ['VIP1', 'VIP2', 'VIP3']:
             return Response({"error": "Invalid level"}, status=status.HTTP_400_BAD_REQUEST)
         
-        users = CustomUser.objects.filter(level=level).order_by('-id')  # LIFO principle
+        # Filter users by level and apply pagination
+        users = CustomUser.objects.filter(level=level).order_by('-id')
+        page = self.paginate_queryset(users)
+        
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        
         serializer = self.get_serializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
