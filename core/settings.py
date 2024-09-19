@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-2me%54_m481*_e033+eb91j5fi0k10^@^2^1^-uqtcz9_*f84i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['wall-mart-api.onrender.com', 'jumia-clone-api-11vb.onrender.com']
+ALLOWED_HOSTS = ['wall-mart-api.onrender.com', '127.0.0.1','jumia-clone-api-11vb.onrender.com']
 
 # Application definition
 
@@ -57,14 +57,14 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 
 
-# Configure CORS
-CORS_ALLOWED_ORIGINS = [
-    "https://www.jumiaonlineshopping.net",  # Add your frontend's origin here
-    # Add any other origins you want to allow
-]
+# # Configure CORS
+# CORS_ALLOWED_ORIGINS = [
+#     "https://www.jumiaonlineshopping.net",  # Add your frontend's origin here
+#     # Add any other origins you want to allow
+# ]
 
 # Optional: Allow all origins (for development only)
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 REST_FRAMEWORK = {
@@ -112,6 +112,18 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # DATABASES = {
 #     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'test_o651',
+#         'USER': 'test_o651_user',
+#         'PASSWORD': 'Agxtne0U2oGasbqjMIsxVj9GwuEavIvY',
+#         'HOST': 'dpg-crlgn1l6l47c7382pkr0-a.oregon-postgres.render.com',
+#         'PORT': '5432',
+#     }
+# }
+
+
+# DATABASES = {
+#     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
@@ -128,6 +140,8 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# pg_dump -h dpg-craktgq3esus73a8afc0-a.oregon-postgres.render.com  -U jumia_clone_user  -p 5432 -W jumia_clone  > database_backup.sqljumia_clone_user
 
 
 

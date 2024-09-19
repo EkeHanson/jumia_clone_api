@@ -15,6 +15,10 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from .serializers import PasswordResetSerializer
 
+from rest_framework.pagination import PageNumberPagination
+
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -33,10 +37,15 @@ class InvitationCodeViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(invitationCode)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+class CustomPagination(PageNumberPagination):
+    page_size = 10  # Adjust this value
 
 class CustomUserViewSet(viewsets.ModelViewSet):
+    pagination_class = CustomPagination
     permission_classes = [AllowAny]
-    queryset = CustomUser.objects.all().order_by('-id')  # LIFO principle
+    #queryset = CustomUser.objects.all().order_by('-id')  # LIFO principle
+    # Optimizing the queryset to reduce database load
+    queryset = CustomUser.objects.select_related('invitationCode').order_by('-id')  # Remove 'only()'
     serializer_class = CustomUserSerializer
 
     def partial_update(self, request, *args, **kwargs):

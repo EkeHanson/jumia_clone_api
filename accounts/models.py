@@ -75,6 +75,11 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
+  
     class Meta:
+        indexes = [
+            models.Index(fields=['phone']),
+            models.Index(fields=['id', 'level']),
+        ]
         verbose_name = "User"
         verbose_name_plural = "Users"
