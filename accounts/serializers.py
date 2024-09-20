@@ -27,9 +27,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
         model = CustomUser
         # fields = "__all__"
 
-        fields = ['id', 'firstName', 'lastName', 'phone', 'level', 'balance', "invitationCode","commission1","commission2",
-                   "unsettle","withdrawalPassword", "date_joined",
-                  "grabbed_orders_count", "invitationCode_display", "user_type"]  # Adjust the fields based on what's needed
+        fields = ["id", "firstName", "lastName", "phone", "password","level", "balance", "invitationCode","commission1","commission2",
+                   "unsettle","withdrawalPassword", "date_joined", "grabbed_orders_count", "invitationCode_display", "user_type"]  # Adjust the fields based on what's needed
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
