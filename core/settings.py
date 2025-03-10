@@ -110,38 +110,25 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'test_o651',
-#         'USER': 'test_o651_user',
-#         'PASSWORD': 'Agxtne0U2oGasbqjMIsxVj9GwuEavIvY',
-#         'HOST': 'dpg-crlgn1l6l47c7382pkr0-a.oregon-postgres.render.com',
-#         'PORT': '5432',
-#     }
-# }
 
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  # Use MySQL database backend
+        'NAME': 'jumiuhpw_jumia_clone_db',
+        'USER': 'jumiuhpw_jumia_clone_db_user',              # Your MySQL username
+        'PASSWORD': '4GK^BS]}M{D%',       # Your MySQL password
+        'HOST': 'your_db_host',               # Usually 'localhost' or the IP address of the DB server
+        'PORT': '3306',                       # MySQL's default port is 3306
+    }
+}
 
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'jumia_clone',
-        'USER': 'jumia_clone_user',
-        'PASSWORD': 'PzTNFofaONfdUDxUfDsuXC84cvLMha5n',
-        'HOST': 'dpg-craktgq3esus73a8afc0-a.oregon-postgres.render.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-# pg_dump -h dpg-craktgq3esus73a8afc0-a.oregon-postgres.render.com  -U jumia_clone_user  -p 5432 -W jumia_clone  > database_backup.sqljumia_clone_user
 
 
 
